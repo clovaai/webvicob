@@ -13,12 +13,21 @@ Official Implementation of WEB based VIsual COrpus Builder(WEBVICOB)
 
 ## Updates
 
+**_2022-11-07_** Paper published on arxiv.  
 **_2022-11-04_** First Commit, We release the codebase.
 
 ## How to Use
 
 ### Environment
 python >= 3.8
+
+##### Download chorme driver
+You can download various versions of chrome-drivers from [here](https://chromedriver.chromium.org/downloads).
+Please note that you should match chrome driver version with your system's installed one.
+```bash
+$ google-chrome --version
+Google Chrome 106.0.5249.103 
+```
 
 ##### Init submodule (google font)
 We use GoogleFonts for various visual information. (font/google)  
@@ -57,6 +66,7 @@ $ PYTHONPATH=$PWD python webvicob/wikipedia/wikipedia.py \
 | option | default | desc                                                                                                                                                                                                              |
 |---|---|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | workspace (str) | ./ | Dir to load json files and save lmdb.                                                                                                                                                                             |
+| chrome_path (str) | resources/chromedriver_linux64_103.0.5060.24 | Path of your chorme driver                                                  |
 | target_lang (str) | ja | Whatever you want.                                                                                                                                                                                                |
 | num_train (int) | -1 | Number of train samples.                                                                                                                                                                                          |
 | num_val (int) | 0 | Number of val samples.                                                                                                                                                                                            |
@@ -117,3 +127,27 @@ $ pre-commit install
 6. Delete branch after Squash&Merge.
 
 Required Approve: 1  
+
+
+## BibTex
+```
+
+```
+
+## License
+WEBVICOB is licensed under Apache-2.0, except resources/workspace_example/raw which is adopted from https://dumps.wikimedia.org/other/enterprise_html/ under CC BY-SA 3.0
+See [LICENSE](/LICENSE) for the full license text.
+
+```
+WEBVICOB
+Copyright 2022-present NAVER Corp.
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
