@@ -1,0 +1,3 @@
+[submodule "font/google"]
+	path = font/google
+	url = https://github.com/google/fonts.git
