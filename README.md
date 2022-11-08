@@ -2,10 +2,10 @@
     
 # WEBVICOB 🕸 : WEB based VIsual COrpus Builder
 
-[![Paper](https://img.shields.io/badge/Paper-arxiv.xxxx.xxxx-red)](#)
+[![Paper](https://img.shields.io/badge/Paper-arxiv.2211.03256-red)](https://arxiv.org/pdf/2211.03256.pdf)
 [![Pypi](https://img.shields.io/badge/python->=3.8-blue)](#)
 
-Official Implementation of WEB based VIsual COrpus Builder(WEBVICOB)  
+Official Implementation of WEB based VIsual COrpus Builder(WEBVICOB)
 
 </div>
 
@@ -13,21 +13,13 @@ Official Implementation of WEB based VIsual COrpus Builder(WEBVICOB)
 
 ## Updates
 
-**_2022-11-07_** Paper published on arxiv.  
+**_2022-11-08_** [Paper](https://arxiv.org/pdf/2211.03256.pdf) published on arxiv.  
 **_2022-11-04_** First Commit, We release the codebase.
 
 ## How to Use
 
 ### Environment
 python >= 3.8
-
-##### Download chorme driver
-You can download various versions of chrome-drivers from [here](https://chromedriver.chromium.org/downloads).
-Please note that you should match chrome driver version with your system's installed one.
-```bash
-$ google-chrome --version
-Google Chrome 106.0.5249.103 
-```
 
 ##### Init submodule (google font)
 We use GoogleFonts for various visual information. (font/google)  
@@ -40,6 +32,14 @@ $ git submodule update --init --recursive
 ##### Install dependencies (Tested on ubuntu18.04)
 ```bash
 $ bash install_dependencies.sh
+```
+
+##### Download chorme driver
+You can download various versions of chrome-drivers from [here](https://chromedriver.chromium.org/downloads).
+Please note that you should match chrome driver version with your system's installed one.
+```bash
+$ google-chrome --version
+Google Chrome 106.0.5249.103 
 ```
 
 ##### Install python packages 
@@ -104,7 +104,7 @@ If you find this work useful to you, please cite:
 @article{kim2022web,
    title={WEB based VIsual COrpus Builder},
    author={Kim, Donghyun and Kim, Yoonsik and Hong, Teakgyu and Yim, Moonbin and Kim, Geewook},
-   journal={arXiv preprint arXiv:xxxx.xxxx},
+   journal={arXiv preprint arXiv:2211.03256},
    year={2022}
 }
 ```
@@ -128,11 +128,6 @@ $ pre-commit install
 
 Required Approve: 1  
 
-
-## BibTex
-```
-
-```
 
 ## License
 WEBVICOB is licensed under Apache-2.0, except resources/workspace_example/raw which is adopted from https://dumps.wikimedia.org/other/enterprise_html/ under CC BY-SA 3.0

@@ -18,6 +18,7 @@ sudo apt-get install -y libnspr4 libpango-1.0-0 libpangocairo-1.0-0 libstdc++6 l
 sudo apt-get install -y libxrender1 libxss1 libxtst6 ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils
 
 # Install google-chrome (version 103.0.5060.xxx) on ubuntu.
+# Change version if you want to use up-to-date chrome.
 wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
 sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
 sudo apt-get update
