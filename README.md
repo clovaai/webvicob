@@ -102,7 +102,7 @@ And untar ndjson files on `[your workspace path]/raw`.
 If you find this work useful to you, please cite:
 ```
 @article{kim2022web,
-   title={WEB based VIsual COrpus Builder},
+   title={Technical Report on Web-based Visual Corpus Construction for Visual Document Understanding},
    author={Kim, Donghyun and Kim, Yoonsik and Hong, Teakgyu and Yim, Moonbin and Kim, Geewook},
    journal={arXiv preprint arXiv:2211.03256},
    year={2022}
