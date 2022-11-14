@@ -1,13 +1,19 @@
 <div align="center">
     
-# WEBVICOB 🕸 : WEB based VIsual COrpus Builder
+# WEBVICOB 🕸 : Web-based Visual Corpus Builder
 
 [![Paper](https://img.shields.io/badge/Paper-arxiv.2211.03256-red)](https://arxiv.org/pdf/2211.03256.pdf)
 [![Pypi](https://img.shields.io/badge/python->=3.8-blue)](#)
 
-Official Implementation of WEB based VIsual COrpus Builder(WEBVICOB)
+Official Implementation of **Web**-based **Vi**sual **Co**rpus **B**uilder (**WEBVICOB**)
 
 </div>
+
+## Introduction
+
+**WEBVICOB** 🕸, **Web**-based **Vi**sual **Co**rpus **B**uilder, is a dataset generator that can readily construct a large-scale visual corpus (i.e., images with text annotations) from a raw Wikipedia HTML dump. The constructed visual corpora can be utilized in building Visual Document Understanding (VDU) backbones. Our technical Report, which describes our engine in detail and provides full experimental results and analyses, can be found here:<br>
+> [**Technical Report on Web-based Visual Corpus Construction for Visual Document Understanding**](https://arxiv.org/abs/2211.03256).<br>
+> [Donghyun Kim](https://github.com/dhkim0225), [Teakgyu Hong](https://dblp.org/pid/183/0952.html), [Moonbin Yim](https://github.com/moonbings), [Yoonsik Kim](https://scholar.google.com/citations?user=nuxd_BsAAAAJ) and [Geewook Kim](https://geewook.kim).
 
 ![annot](resources/annot.png)
 
