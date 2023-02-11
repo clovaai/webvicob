@@ -21,7 +21,7 @@ Official Implementation of **Web**-based **Vi**sual **Co**rpus **B**uilder (**WE
 
 **_2022-11-08_** [Paper](https://arxiv.org/pdf/2211.03256.pdf) published on arxiv.  
 **_2022-11-04_** First Commit, We release the codebase.
-**_2023-02-11_** HTML Section Chunker added
+**_2023-02-11_** HTML Section Chunker added, Solve memory-leak issue.
 
 ## How to Use
 
@@ -91,6 +91,7 @@ $ PYTHONPATH=$PWD python webvicob/wikipedia/wikipedia.py \
 | chunk_idx (int) | None | Chunk index of json_list. Useful when you have multiple computers.                                                                                                                                                |
 | total_chunk (int) | None | Total number of chunks of json_list.                                                                                                                                                                              |
 | html_section_chunker (bool) | True | Chunk HTML by section. This options is very useful when HTML page has a lot of contents. Experiments in paper didn't use chunk option. | 
+| font_dir_path (str) | font_dir_path | Font directory path |
 
 ### Prepare Dataset
 We made sample ndjson files on resources/workspace_example.  
