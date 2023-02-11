@@ -129,4 +129,13 @@ dmypy.json
 .pyre/
 
 .idea
-resources/chromedriver_linux64_103.0.5060.24
+resources/chromedriver*
+resources/workspace_example/de_*
+resources/workspace_example/en_*
+resources/workspace_example/es_*
+resources/workspace_example/fr_*
+resources/workspace_example/it_*
+resources/workspace_example/ja_*
+resources/workspace_example/ko_*
+resources/workspace_example/pt_*
+resources/workspace_example/zh_*

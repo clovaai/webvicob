@@ -59,7 +59,7 @@ def main(
     final_width=None,
     chunk_idx=None,
     total_chunk=None,
-    chrome_path="resources/chromedriver_linux64_103.0.5060.24",
+    chrome_path="resources/chromedriver",
     html_section_chunker=True,
 ):
     assert capture_height_limit < 32760  # opencv limit
@@ -116,8 +116,7 @@ def main(
             if html == "keyboard interrupt":
                 break
             if html == "None":
-                print("Failed to capture.")
-                continue
+                raise RuntimeError("Failed to capture.")
 
             if data_counter["total"] < num_val:
                 mode = "val"

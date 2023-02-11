@@ -73,7 +73,7 @@ $ PYTHONPATH=$PWD python webvicob/wikipedia/wikipedia.py \
 | option | default | desc                                                                                                                                                                                                              |
 |---|---|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | workspace (str) | ./ | Dir to load json files and save lmdb.                                                                                                                                                                             |
-| chrome_path (str) | resources/chromedriver_linux64_103.0.5060.24 | Path of your chorme driver                                                  |
+| chrome_path (str) | resources/chromedriver | Path of your chorme driver                                                  |
 | target_lang (str) | ja | Whatever you want.                                                                                                                                                                                                |
 | num_train (int) | -1 | Number of train samples.                                                                                                                                                                                          |
 | num_val (int) | 0 | Number of val samples.                                                                                                                                                                                            |

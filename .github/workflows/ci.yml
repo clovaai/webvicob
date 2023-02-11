@@ -6,15 +6,34 @@ on:
     branches: [ "main" ]
 
 jobs:
-  lint:
-    name: black & isort
+  black:
+    name: black
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: psf/black@stable
         with:
           version: "23.1.0"
+
+  isort:
+    name: isort
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
       - uses: isort/isort-action@v1.1.0
         with:
           isort-version: "5.12.0"
           configuration: "--check-only --diff --profile black"
+
+  pytest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.8"
+      - run: git submodule update --init --recursive
+      - run: bash install_dependencies.sh
+      - run: pip install -r requirements.txt
+      - run: pip install pytest==7.2.1
+      - run: pytest
