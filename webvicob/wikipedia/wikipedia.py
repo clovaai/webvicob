@@ -36,8 +36,8 @@ from shapely.ops import unary_union
 
 from webvicob.lmdb_maker import WebvicobLMDB
 from webvicob.shrinkbox import shrinkbox
+from webvicob.wikipedia.chunker import WikiHtmlChunker
 
-semaphore = mp.Semaphore(100)
 base_font_path = Path("font/google/ofl/notosans/NotoSans-Regular.ttf").resolve()
 
 
@@ -60,6 +60,7 @@ def main(
     chunk_idx=None,
     total_chunk=None,
     chrome_path="resources/chromedriver_linux64_103.0.5060.24",
+    html_section_chunker=True,
 ):
     assert capture_height_limit < 32760  # opencv limit
     if num_process == -1:
@@ -107,7 +108,7 @@ def main(
 
     if debug:
         counter = 0
-        for inp in html_generator(workspace, target_lang, shm_name, chunk_idx, total_chunk):
+        for inp in html_generator(workspace, target_lang, shm_name, chunk_idx, total_chunk, html_section_chunker):
             counter += 1
             if counter < 5:
                 continue
@@ -141,7 +142,7 @@ def main(
         with mp.Pool(num_process) as pool:
             for html, modified_html, jpeg, annots in pool.imap_unordered(
                 mp_job,
-                html_generator(workspace, target_lang, shm_name, chunk_idx, total_chunk),
+                html_generator(workspace, target_lang, shm_name, chunk_idx, total_chunk, html_section_chunker),
             ):
                 if html == "keyboard interrupt":
                     break
@@ -216,19 +217,23 @@ def get_total_size(workspace, target_lang, chunk_idx, total_chunk):
     return total_size
 
 
-def html_generator(workspace, target_lang, shm_name, chunk_idx, total_chunk):
+def html_generator(workspace, target_lang, shm_name, chunk_idx, total_chunk, html_section_chunker):
     original_data_path = workspace / "raw"
     jsonl_paths = get_jsonl_paths(original_data_path, target_lang)
     if chunk_idx is not None and total_chunk is not None:
         jsonl_paths = np.array_split(jsonl_paths, total_chunk)[chunk_idx]
 
+    chunker = WikiHtmlChunker()
     for jsonl_path in jsonl_paths:
         reader = JsonlReader(jsonl_path)
         for i in range(reader.jsonl_size):
             html = reader.read_jsonl(i)["article_body"]["html"]
             html = replace_html(html, target_lang)
-            semaphore.acquire()
-            yield {"html": html, "shm_name": shm_name}
+            if html_section_chunker:
+                for html_chunk in chunker(html=html):
+                    yield {"html": html_chunk, "shm_name": shm_name}
+            else:
+                yield {"html": html, "shm_name": shm_name}
 
 
 def replace_html(html, target_lang):
@@ -319,7 +324,6 @@ def get_driver(chrome_path, headless=True, capture_width=1600):
 
 
 def mp_job(inp):
-    semaphore.release()
     try:
         shm = SharedMemory(name=inp["shm_name"])
         opt = pickle.loads(bytes(shm.buf[:]))
