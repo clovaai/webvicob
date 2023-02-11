@@ -32,6 +32,7 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: "3.8"
+      - run: git submodule update --init --recursive
       - run: bash install_dependencies.sh
       - run: pip install -r requirements.txt
       - run: pip install pytest==7.2.1
