@@ -101,16 +101,13 @@ def main(
     ver_str = get_version_str(target_lang, num_train, chunk_idx)
     print(f"VER_STR: {ver_str}", flush=True)
     webvicob_lmdbs = {
-        mode: WebvicobLMDB(workspace / ver_str / mode, verbose=False)
-        for mode in ("train", "val", "test")
+        mode: WebvicobLMDB(workspace / ver_str / mode, verbose=False) for mode in ("train", "val", "test")
     }
     data_counter = {"total": 0, "train": 0, "val": 0, "test": 0}
 
     if debug:
         counter = 0
-        for inp in html_generator(
-            workspace, target_lang, shm_name, chunk_idx, total_chunk
-        ):
+        for inp in html_generator(workspace, target_lang, shm_name, chunk_idx, total_chunk):
             counter += 1
             if counter < 5:
                 continue
@@ -144,9 +141,7 @@ def main(
         with mp.Pool(num_process) as pool:
             for html, modified_html, jpeg, annots in pool.imap_unordered(
                 mp_job,
-                html_generator(
-                    workspace, target_lang, shm_name, chunk_idx, total_chunk
-                ),
+                html_generator(workspace, target_lang, shm_name, chunk_idx, total_chunk),
             ):
                 if html == "keyboard interrupt":
                     break
@@ -313,9 +308,7 @@ def get_driver(chrome_path, headless=True, capture_width=1600):
     options.add_argument("--hide-scrollbars")
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option("useAutomationExtension", False)
-    options.add_experimental_option(
-        "prefs", {"profile.default_content_settings.popups": 0}
-    )
+    options.add_experimental_option("prefs", {"profile.default_content_settings.popups": 0})
     if headless:
         options.add_argument("--headless")
 
@@ -359,15 +352,11 @@ def mp_job(inp):
         driver.quit()
         if jpeg is None:
             return "None", "None", "None", "None"
-        annots = create_annotation(
-            jpeg, boxes, font2path, opt["shrink_heuristic"], opt["target_lang"]
-        )
+        annots = create_annotation(jpeg, boxes, font2path, opt["shrink_heuristic"], opt["target_lang"])
         annots["capture_width"] = capture_width
 
         if opt["final_width"] is not None:
-            jpeg, annots = resize_to_final_width(
-                jpeg, annots, opt["final_width"], capture_width
-            )
+            jpeg, annots = resize_to_final_width(jpeg, annots, opt["final_width"], capture_width)
     except KeyboardInterrupt:
         print("Keyboard interrupted. Shutting down ...")
         return "keyboard interrupt", "None", "None", "None"
@@ -413,9 +402,7 @@ def modify_html(html):
     return html
 
 
-def execute_js(
-    driver, remove_background, unroll_contents, change_para_font, js_font_paths
-):
+def execute_js(driver, remove_background, unroll_contents, change_para_font, js_font_paths):
     update_invisible_element_priority(driver)
     remove_element(driver, "label")
     remove_pseudo_element(driver)
@@ -444,9 +431,7 @@ def load_html(driver, html, tmp_path, unlink=True):
 
 
 def capture(driver, capture_width, capture_height_limit):
-    driver.execute_cdp_cmd(
-        "Runtime.setMaxCallStackSizeToCapture", {"size": 2 ** 31 - 1}
-    )
+    driver.execute_cdp_cmd("Runtime.setMaxCallStackSizeToCapture", {"size": 2**31 - 1})
     page_rect = driver.execute_cdp_cmd("Page.getLayoutMetrics", {})
     capture_h = page_rect["cssContentSize"]["height"] + 50
     if capture_h >= capture_height_limit:
@@ -926,18 +911,10 @@ def shrink_height(image, boxes, font2path, shrink_heuristic):
                 font_path = None
 
             top_ratio, bottom_ratio = get_glyph_ratio(font_path, text)
-            if (
-                top_ratio is not None
-                and bottom_ratio is not None
-                and top_ratio == bottom_ratio
-            ):
+            if top_ratio is not None and bottom_ratio is not None and top_ratio == bottom_ratio:
                 top_ratio, bottom_ratio = get_glyph_ratio(str(base_font_path), text)
 
-            if (
-                top_ratio is not None
-                and bottom_ratio is not None
-                and top_ratio != bottom_ratio
-            ):
+            if top_ratio is not None and bottom_ratio is not None and top_ratio != bottom_ratio:
                 bbox = deepcopy(box["bbox"])
                 height = bbox[3] - bbox[1]
                 box["bbox"][1] = math.floor(bbox[1] + height * top_ratio)
@@ -1030,8 +1007,7 @@ def line_grouping(cl_boxes):
     for cl_box in cl_boxes:  # char boxes
         stretched_coord = stretch_box(cl_box["bbox"])
         if stretched_prev_cl_coord is None or (
-            stretched_prev_cl_coord is not None
-            and is_intersect(stretched_prev_cl_coord, stretched_coord)
+            stretched_prev_cl_coord is not None and is_intersect(stretched_prev_cl_coord, stretched_coord)
         ):
             line.append(cl_box)
         else:
@@ -1111,17 +1087,11 @@ def final_line_structuring(nested_annots, lines):
                     word_dict["chars"].append(char_dict)
 
             if word_dict["chars"] is not None:
-                word_dict["text"] = "".join(
-                    char_dict["text"] for char_dict in word_dict["chars"]
-                )
-                word_dict["bbox"] = get_enclosing_bbox(
-                    [char_dict["bbox"] for char_dict in word_dict["chars"]]
-                )
+                word_dict["text"] = "".join(char_dict["text"] for char_dict in word_dict["chars"])
+                word_dict["bbox"] = get_enclosing_bbox([char_dict["bbox"] for char_dict in word_dict["chars"]])
 
             line_dict["words"].append(word_dict)
-        line_dict["bbox"] = get_enclosing_bbox(
-            [word["bbox"] for word in line_dict["words"]]
-        )
+        line_dict["bbox"] = get_enclosing_bbox([word["bbox"] for word in line_dict["words"]])
         nested_annots["lines"].append(line_dict)
 
 

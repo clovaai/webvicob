@@ -11,7 +11,7 @@ import cv2
 import lmdb
 import numpy as np
 
-LMDB_MAP_SIZE = 10 * 1024 ** 4  # 10 TiB
+LMDB_MAP_SIZE = 10 * 1024**4  # 10 TiB
 COMMIT_INTERVAL = 100
 
 
@@ -65,9 +65,7 @@ class WebvicobLMDB:
         self.put(encode(f"{idx}_img"), img_buffer)
 
     def put_annots(self, annots, idx):
-        self.put(
-            encode(f"{idx}_annots"), encode(json.dumps(annots, ensure_ascii=False))
-        )
+        self.put(encode(f"{idx}_annots"), encode(json.dumps(annots, ensure_ascii=False)))
 
     def put_num_data(self, num_data):
         self.put(encode("num_data"), encode(str(num_data)))
