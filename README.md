@@ -18,10 +18,9 @@ Official Implementation of **Web**-based **Vi**sual **Co**rpus **B**uilder (**WE
 ![annot](resources/annot.png)
 
 ## Updates
-
-**_2022-11-08_** [Paper](https://arxiv.org/pdf/2211.03256.pdf) published on arxiv.  
-**_2022-11-04_** First Commit, We release the codebase.
-**_2023-02-11_** HTML Section Chunker added, Solve memory-leak issue.
+**_2023-02-11_** HTML Section Chunker added, Solve memory-leak issue.  
+**_2022-11-08_** [Paper](https://arxiv.org/pdf/2211.03256.pdf) published on arxiv.    
+**_2022-11-04_** First Commit, We release the codebase.  
 
 ## How to Use
 
