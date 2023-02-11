@@ -20,6 +20,7 @@ from copy import deepcopy
 from multiprocessing.shared_memory import SharedMemory
 from pathlib import Path
 from pprint import pprint
+from tempfile import mkdtemp
 from typing import List, Optional
 from uuid import uuid4
 
@@ -53,14 +54,15 @@ def main(
     remove_background=True,
     unroll_contents=False,
     change_para_font=True,
-    sleep_time=1,
-    capture_widths=(800, 1200, 1600),
+    sleep_time=1.0,
+    capture_widths=(1200, 1600),
     capture_height_limit=16384,
     final_width=None,
     chunk_idx=None,
     total_chunk=None,
     chrome_path="resources/chromedriver",
     html_section_chunker=True,
+    font_dir_path="font/google",
 ):
     assert capture_height_limit < 32760  # opencv limit
     if num_process == -1:
@@ -69,7 +71,7 @@ def main(
         num_process = 1
 
     workspace = Path(workspace)
-    font_paths = get_font_paths(debug)
+    font_paths = get_font_paths(font_dir_path, debug)
 
     opt = {
         "debug": debug,
@@ -85,7 +87,10 @@ def main(
         "final_width": final_width,
         "chrome_path": chrome_path,
     }
-    pprint(opt)
+    for k, v in opt.items():
+        if k.endswith("font_paths"):
+            continue
+        print(f"{k}: {v}")
 
     pickled_opt = bytearray(pickle.dumps(opt))
     shm_name = f"webvicob_wikipedia_{uuid4()}"
@@ -94,8 +99,7 @@ def main(
     shm.close()
 
     if num_train == -1:
-        num_total_data = get_total_size(workspace, target_lang, chunk_idx, total_chunk)
-        num_train = num_total_data - num_val - num_test
+        num_total_data = num_train = math.inf
     else:
         num_total_data = num_train + num_val + num_test
 
@@ -107,11 +111,7 @@ def main(
     data_counter = {"total": 0, "train": 0, "val": 0, "test": 0}
 
     if debug:
-        counter = 0
         for inp in html_generator(workspace, target_lang, shm_name, chunk_idx, total_chunk, html_section_chunker):
-            counter += 1
-            if counter < 5:
-                continue
             html, modified_html, jpeg, annots = mp_job(inp)
             if html == "keyboard interrupt":
                 break
@@ -166,7 +166,7 @@ def main(
                 data_counter["total"] += 1
 
                 if data_counter["total"] % 1000 == 0:
-                    print(f"[{data_counter['total']} / {num_total_data}] processed.")
+                    print(f"[{ver_str}] [{data_counter['total']} / {num_total_data}] processed.")
 
                 if data_counter["total"] == num_total_data:
                     break
@@ -187,9 +187,9 @@ def main(
         webvicob_lmdb.wrap_up()
 
 
-def get_font_paths(debug):
+def get_font_paths(font_dir_path, debug):
     font_paths = []
-    for p in Path("font/google").glob("**/*.ttf"):
+    for p in Path(font_dir_path).glob("**/*.ttf"):
         font_path = str(p.resolve())
         font_paths.append(font_path)
 
@@ -304,17 +304,28 @@ def get_driver(chrome_path, headless=True, capture_width=1600):
     service = Service(chrome_path)
 
     options = webdriver.ChromeOptions()
-    options.add_argument("disable-application-cache")
-    options.add_argument("disk-cache-size=2147483648")  # 2GB
+    options.add_argument("--disable-application-cache")
+    options.add_argument("--disk-cache-size=21474836480")  # 20GB
     options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-dev-tools")
+    options.add_argument("--disable-setuid-sandbox")
     options.add_argument("--no-sandbox")
+    options.add_argument("--incognito")
+    options.add_argument("--single-process")
+    options.add_argument("--disable-gpu")
     options.add_argument(f"--window-size={capture_width},100")
     options.add_argument("--hide-scrollbars")
+    options.add_argument("--no-zygote")
+    options.add_argument(f"--user-data-dir={mkdtemp()}")
+    options.add_argument(f"--data-path={mkdtemp()}")
+    options.add_argument(f"--disk-cache-dir={mkdtemp()}")
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option("useAutomationExtension", False)
     options.add_experimental_option("prefs", {"profile.default_content_settings.popups": 0})
     if headless:
         options.add_argument("--headless")
+    else:
+        options.add_argument("--remote-debugging-port=9222")
 
     driver = webdriver.Chrome(service=service, options=options)
     driver.timeouts._script = 180
@@ -328,7 +339,19 @@ def mp_job(inp):
         opt = pickle.loads(bytes(shm.buf[:]))
         capture_width = random.choice(opt["capture_widths"])
 
-        driver = get_driver(chrome_path=opt["chrome_path"], headless=True, capture_width=capture_width)
+        driver = None
+        try:
+            driver = get_driver(
+                chrome_path=opt["chrome_path"],
+                headless=True,
+                capture_width=capture_width,
+            )
+        except BaseException as e:
+            time.sleep(10)
+
+        if driver is None:
+            return "None", "None", "None", "None"
+
         modified_html = modify_html(inp["html"])
         load_html(driver, modified_html, f"tmp_{uuid4()}.html")
 
@@ -338,6 +361,7 @@ def mp_job(inp):
         page_rect = driver.execute_cdp_cmd("Page.getLayoutMetrics", {})
         capture_height = page_rect["cssContentSize"]["height"] + 50
         if capture_height >= opt["capture_height_limit"]:
+            driver.quit()
             print(f"image height {capture_height} is too big to capture.", flush=True)
             return "None", "None", "None", "None"
 
@@ -351,7 +375,6 @@ def mp_job(inp):
         time.sleep(opt["sleep_time"])
         boxes = get_boxes(driver)
         jpeg = capture(driver, capture_width, opt["capture_height_limit"])
-        driver.close()
         driver.quit()
         if jpeg is None:
             return "None", "None", "None", "None"
@@ -729,7 +752,7 @@ def change_paragraph_fonts(driver, js_font_paths):
         for (let i = 0; i < targetElements.length; i++) {
             targetElements[i].style.setProperty('font-family', `font_${String(i)}, font_base`, 'important');
         }
-        
+
         return font2path
     """
     base_font_js_path = "file:///" + str(base_font_path)
@@ -802,7 +825,7 @@ def get_boxes(driver):
         let para_counter = 0;
         let table_counter = 0;
         const paraNodeNames = ["TH", "TR", "TD", "SECTION", "P", "H1", "H2", "H3", "DIV", "UL", "OL"];
-        
+
         function getBoxes(node, group) {
             let boxes = [];
             const children = node.childNodes;
@@ -826,7 +849,7 @@ def get_boxes(driver):
                 group = `paragraph_${para_counter}`;
                 para_counter += 1;
             }
-             
+
             for (const child of children) {
                 if (child instanceof Element) {
                     const child_rect = child.getBoundingClientRect();
@@ -835,7 +858,7 @@ def get_boxes(driver):
             }
 
             let box_type = null;
-            
+
             if (tag === 'img' && node.classList.contains('mwe-math-fallback-image-inline'))
                 box_type = 'latex';
             else if (tag === 'img' || tag === 'canvas' || tag === 'svg' || tag === 'video' || style.backgroundImage !== 'none')
@@ -844,7 +867,7 @@ def get_boxes(driver):
                 box_type = 'char';
             else if (node.nodeName === "TBODY" && node.parentNode.getAttribute('role') !== 'presentation')
                 box_type = 'table'
-                
+
             if (box_type !== null)
                 boxes.push({
                     "box_type": box_type,
@@ -1108,6 +1131,8 @@ def get_version_str(target_lang, num_train, chunk_idx):
 
 
 def human_format(num):
+    if num == math.inf:
+        return "FULL"
     magnitude = 0
     while abs(num) >= 1000:
         magnitude += 1
