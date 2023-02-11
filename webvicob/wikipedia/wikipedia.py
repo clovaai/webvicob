@@ -29,7 +29,6 @@ import fire
 import numpy as np
 from bs4 import BeautifulSoup, element
 from matplotlib import cm
-from pygame import freetype
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from shapely.geometry import MultiPolygon, Polygon
@@ -38,6 +37,10 @@ from shapely.ops import unary_union
 from webvicob.lmdb_maker import WebvicobLMDB
 from webvicob.shrinkbox import shrinkbox
 from webvicob.wikipedia.chunker import WikiHtmlChunker
+
+os.environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
+
+from pygame import freetype
 
 base_font_path = Path("font/google/ofl/notosans/NotoSans-Regular.ttf").resolve()
 
@@ -64,6 +67,8 @@ def main(
     html_section_chunker=True,
     font_dir_path="font/google",
 ):
+    mp.set_start_method("spawn")
+
     assert capture_height_limit < 32760  # opencv limit
     if num_process == -1:
         num_process = os.cpu_count()
@@ -138,7 +143,7 @@ def main(
             if data_counter["total"] == num_total_data:
                 break
     else:
-        with mp.Pool(num_process) as pool:
+        with mp.Pool(num_process, maxtasksperchild=100) as pool:
             for html, modified_html, jpeg, annots in pool.imap_unordered(
                 mp_job,
                 html_generator(workspace, target_lang, shm_name, chunk_idx, total_chunk, html_section_chunker),
