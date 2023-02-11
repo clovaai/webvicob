@@ -27,12 +27,8 @@ def shrinkbox(gray, quad, use_otsu=False, threshold=50.0, step_size=1):
     if use_otsu:
         xmin, ymin = np.min(quad, axis=0)
         bin_gray = np.zeros((h, w), dtype=np.uint8)
-        gray[ymin:ymax, xmin:xmax] = cv2.GaussianBlur(
-            gray[ymin:ymax, xmin:xmax], (5, 5), 0
-        )
-        threshold, bin_patch = cv2.threshold(
-            gray[ymin:ymax, xmin:xmax], 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU
-        )
+        gray[ymin:ymax, xmin:xmax] = cv2.GaussianBlur(gray[ymin:ymax, xmin:xmax], (5, 5), 0)
+        threshold, bin_patch = cv2.threshold(gray[ymin:ymax, xmin:xmax], 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         bin_gray[ymin:ymax, xmin:xmax] = bin_patch
     else:
         bin_gray = gray
