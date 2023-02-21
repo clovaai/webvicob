@@ -17,11 +17,13 @@ class WikiHtmlChunker:
         min_section_tokens: int = 100,
         min_section_chars: int = None,
         append_title: bool = True,
+        max_section_depth: int = 0,
     ):
         # wikipedia chunk options
         self.min_section_tokens = min_section_tokens
         self.min_section_chars = min_section_chars
         self.append_title = append_title
+        self.max_section_depth = max_section_depth
 
     def __call__(self, html: str):
         chunks = []
@@ -67,14 +69,14 @@ class WikiHtmlChunker:
             tag_names.append(child.name)
         return tag_names
 
-    def extract_sections(self, sections):
+    def extract_sections(self, sections, cur_depth=0):
         outputs = []
         for section in sections:
             _sections = section.find_all("section")
-            if len(_sections) < 1:
+            if len(_sections) < 1 or cur_depth >= self.max_section_depth:
                 outputs += [section]
             else:
-                outputs += self.extract_sections(_sections)
+                outputs += self.extract_sections(_sections, cur_depth + 1)
         return outputs
 
     def extract_section_indexes(self, html, sections):
