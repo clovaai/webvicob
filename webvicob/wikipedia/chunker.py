@@ -198,4 +198,3 @@ class WikiHtmlChunker:
             chunks.append(chunk)
 
         return chunks
-
