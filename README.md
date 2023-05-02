@@ -12,12 +12,13 @@ Official Implementation of **Web**-based **Vi**sual **Co**rpus **B**uilder (**WE
 ## Introduction
 
 **WEBVICOB** 🕸, **Web**-based **Vi**sual **Co**rpus **B**uilder, is a dataset generator that can readily construct a large-scale visual corpus (i.e., images with text annotations) from a raw Wikipedia HTML dump. The constructed visual corpora can be utilized in building Visual Document Understanding (VDU) backbones. Our technical Report, which describes our engine in detail and provides full experimental results and analyses, can be found here:<br>
-> [**Technical Report on Web-based Visual Corpus Construction for Visual Document Understanding**](https://arxiv.org/abs/2211.03256).<br>
+> [**On Web-based Visual Corpus Construction for Visual Document Understanding**](https://arxiv.org/abs/2211.03256).<br>
 > [Donghyun Kim](https://github.com/dhkim0225), [Teakgyu Hong](https://dblp.org/pid/183/0952.html), [Moonbin Yim](https://github.com/moonbings), [Yoonsik Kim](https://scholar.google.com/citations?user=nuxd_BsAAAAJ) and [Geewook Kim](https://geewook.kim).
 
 ![annot](resources/annot.png)
 
 ## Updates
+**_2023-05-03_** Our paper is accepted at ICDAR2023. A new version of the paper has been published on arxiv.  
 **_2023-02-11_** HTML Section Chunker added, Solve memory-leak issue.  
 **_2022-11-08_** [Paper](https://arxiv.org/pdf/2211.03256.pdf) published on arxiv.    
 **_2022-11-04_** First Commit, We release the codebase.  
