@@ -2,7 +2,7 @@
     
 # WEBVICOB 🕸 : Web-based Visual Corpus Builder
 
-[![Paper](https://img.shields.io/badge/Paper-arxiv.2211.03256-red)](https://arxiv.org/pdf/2211.03256.pdf)
+[![Paper](https://img.shields.io/badge/Paper-arxiv.2211.03256-red)](https://arxiv.org/abs/2211.03256)
 [![Pypi](https://img.shields.io/badge/python->=3.8-blue)](#)
 
 Official Implementation of **Web**-based **Vi**sual **Co**rpus **B**uilder (**WEBVICOB**)
@@ -20,7 +20,7 @@ Official Implementation of **Web**-based **Vi**sual **Co**rpus **B**uilder (**WE
 ## Updates
 **_2023-05-03_** Our paper is accepted at ICDAR2023. A new version of the paper has been published on arxiv.  
 **_2023-02-11_** HTML Section Chunker added, Solve memory-leak issue.  
-**_2022-11-08_** [Paper](https://arxiv.org/pdf/2211.03256.pdf) published on arxiv.    
+**_2022-11-08_** [Paper](https://arxiv.org/abs/2211.03256) published on arxiv.    
 **_2022-11-04_** First Commit, We release the codebase.  
 
 ## How to Use
