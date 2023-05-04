@@ -3,6 +3,7 @@
 # WEBVICOB 🕸 : Web-based Visual Corpus Builder
 
 [![Paper](https://img.shields.io/badge/Paper-arxiv.2211.03256-red)](https://arxiv.org/abs/2211.03256)
+[![Conference](https://img.shields.io/badge/ICDAR-2023-brightgreen)](#how-to-cite)
 [![Pypi](https://img.shields.io/badge/python->=3.8-blue)](#)
 
 Official Implementation of **Web**-based **Vi**sual **Co**rpus **B**uilder (**WEBVICOB**)
