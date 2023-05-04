@@ -13,7 +13,7 @@ Official Implementation of **Web**-based **Vi**sual **Co**rpus **B**uilder (**WE
 
 **WEBVICOB** 🕸, **Web**-based **Vi**sual **Co**rpus **B**uilder, is a dataset generator that can readily construct a large-scale visual corpus (i.e., images with text annotations) from a raw Wikipedia HTML dump. The constructed visual corpora can be utilized in building Visual Document Understanding (VDU) backbones. Our academic paper, which describes our engine in detail and provides full experimental results and analyses, can be found here:<br>
 > [**On Web-based Visual Corpus Construction for Visual Document Understanding**](https://arxiv.org/abs/2211.03256).<br>
-> [Donghyun Kim](https://github.com/dhkim0225), [Teakgyu Hong](https://dblp.org/pid/183/0952.html), [Moonbin Yim](https://github.com/moonbings), [Yoonsik Kim](https://scholar.google.com/citations?user=nuxd_BsAAAAJ) and [Geewook Kim](https://geewook.kim).
+> [Donghyun Kim](https://github.com/dhkim0225), [Teakgyu Hong](https://dblp.org/pid/183/0952.html), [Moonbin Yim](https://github.com/moonbings), [Yoonsik Kim](https://scholar.google.com/citations?user=nuxd_BsAAAAJ) and [Geewook Kim](https://geewook.kim). In ICDAR 2023 (to appear).
 
 ![annot](resources/annot.png)
 
@@ -110,11 +110,12 @@ And untar ndjson files on `[your workspace path]/raw`.
 ## How to Cite
 If you find this work useful to you, please cite:
 ```
-@article{kim2022web,
-   title={Technical Report on Web-based Visual Corpus Construction for Visual Document Understanding},
-   author={Kim, Donghyun and Kim, Yoonsik and Hong, Teakgyu and Yim, Moonbin and Kim, Geewook},
-   journal={arXiv preprint arXiv:2211.03256},
-   year={2022}
+@inproceedings{kim2023web,
+  title     = {On Web-based Visual Corpus Construction for Visual Document Understanding},
+  author    = {Kim, Donghyun and Hong, Teakgyu and Yim, Moonbin and Kim, Yoonsik and Kim, Geewook},
+  booktitle = {International Conference on Document Analysis and Recognition (ICDAR)},
+  year      = {2023},
+  note      = {accepted, to appear},
 }
 ```
 
